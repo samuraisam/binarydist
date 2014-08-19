@@ -2,10 +2,12 @@ package binarydist
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"testing"
+	"time"
 )
 
 var diffT = []struct {
@@ -35,6 +37,7 @@ func TestDiff(t *testing.T) {
 			panic(err)
 		}
 
+		start := time.Now()
 		cmd := exec.Command("bsdiff", s.old.Name(), s.new.Name(), exp.Name())
 		cmd.Stdout = os.Stdout
 		err = cmd.Run()
@@ -42,11 +45,14 @@ func TestDiff(t *testing.T) {
 		if err != nil {
 			panic(err)
 		}
+		fmt.Println("bsdiff cost: %s", time.Now().Sub(start))
 
+		start = time.Now()
 		err = Diff(s.old, s.new, got)
 		if err != nil {
 			t.Fatal("err", err)
 		}
+		fmt.Println("binarydist cost: %s", time.Now().Sub(start))
 
 		_, err = got.Seek(0, 0)
 		if err != nil {
