@@ -5,6 +5,8 @@ import (
 	"encoding/binary"
 	"io"
 	"io/ioutil"
+
+	gobzip "github.com/hsinhoyeh/gobzip"
 )
 
 func swap(a []int, i, j int) { a[i], a[j] = a[j], a[i] }
@@ -225,7 +227,7 @@ func diff(obuf, nbuf []byte, patch io.WriteSeeker) error {
 	}
 
 	// Compute the differences, writing ctrl as we go
-	pfbz2, err := newBzip2Writer(patch)
+	pfbz2, err := gobzip.NewBzipWriter(patch)
 	if err != nil {
 		return err
 	}
@@ -351,7 +353,7 @@ func diff(obuf, nbuf []byte, patch io.WriteSeeker) error {
 	hdr.CtrlLen = int64(l64 - 32)
 
 	// Write compressed diff data
-	pfbz2, err = newBzip2Writer(patch)
+	pfbz2, err = gobzip.NewBzipWriter(patch)
 	if err != nil {
 		return err
 	}
@@ -377,7 +379,7 @@ func diff(obuf, nbuf []byte, patch io.WriteSeeker) error {
 	hdr.DiffLen = n64 - l64
 
 	// Write compressed extra data
-	pfbz2, err = newBzip2Writer(patch)
+	pfbz2, err = gobzip.NewBzipWriter(patch)
 	if err != nil {
 		return err
 	}
