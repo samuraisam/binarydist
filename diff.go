@@ -6,7 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 
-	gobzip "github.com/hsinhoyeh/gobzip"
+	gobzip "github.com/samuraisam/gobzip"
 )
 
 func swap(a []int, i, j int) { a[i], a[j] = a[j], a[i] }
